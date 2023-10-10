@@ -9,7 +9,7 @@ webhooks:
     clientConfig:
       service:
         name: webhook-example
-        namespace: default
+        namespace: webhook-example
         path: "/mutate"
       caBundle: ${CA_BUNDLE}
     admissionReviewVersions: [ "v1beta1" ]

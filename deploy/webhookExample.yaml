@@ -17,8 +17,8 @@ spec:
       serviceAccount: webhook-example
       containers:
         - name: webhook-example
-          image: docker.io/webhook-example:v1
-          imagePullPolicy: Always
+          image: swr.cn-north-4.myhuaweicloud.com/hfbbg4/k8s-webhook-helloworld:v1
+          imagePullPolicy: IfNotPresent
           args:
             - --namespace=webhook-example
             - --automatic-authentication=false

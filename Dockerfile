@@ -1,4 +1,4 @@
 FROM alpine:latest
 
-ADD webhook-example /webhook-example
+ADD bin/k8s-webhook-helloworld /webhook-example
 ENTRYPOINT ["./webhook-example"]
