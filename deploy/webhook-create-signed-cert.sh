@@ -131,6 +131,11 @@ if [[ ${serverCert} == '' ]]; then
 fi
 echo ${serverCert} | openssl base64 -d -A -out ${tmpdir}/server-cert.pem
 
+# 把证书拷贝到默认路径，方便本地调试
+mkdir -p ../pki
+cp ${tmpdir}/server-key.pem ../pki/key.pem
+cp ${tmpdir}/server-cert.pem ../pki/cert.pem
+
 
 # create the secret with CA cert and server cert/key
 kubectl  ${kubeconfig} create secret generic ${secret} \

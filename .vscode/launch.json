@@ -1,0 +1,15 @@
+
+{
+    "version": "0.2.0",
+    "configurations": [
+      {
+        "name": "Launch Go",
+        "type": "go",
+        "request": "launch",
+        "mode": "auto",
+        "program": "${workspaceFolder}",
+        "env": {},
+        "args": ["--tlsCertFile=./pki/cert.pem","--tlsKeyFile=./pki/key.pem","--log-v=5","--automatic-authentication=false"]
+      }
+    ]
+}
