@@ -22,4 +22,5 @@ webhooks:
     namespaceSelector:
       matchLabels:
         webhook-example: enabled
+# 只有命中了MutatingWebhookConfiguration这个资源的条件才会触发
 

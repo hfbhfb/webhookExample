@@ -63,6 +63,7 @@ csrName=${service}.${namespace}
 tmpdir=$(mktemp -d)
 echo "creating certs in tmpdir ${tmpdir} "
 
+# 签名本地 192.168.125.37 
 cat <<EOF >> ${tmpdir}/ 
 [req]
 req_extensions = v3_req
@@ -83,7 +84,6 @@ DNS.3 = ${service}.${namespace}.svc
 subjectAltName = IP:192.168.125.37
 
 EOF
-
 
 openssl genrsa -out ${tmpdir}/server-key.pem 2048
 openssl req -new -key ${tmpdir}/server-key.pem -subj "/CN=system:node:${service}.${namespace}.svc;/O=system:nodes" -out ${tmpdir}/server.csr -config ${tmpdir}/csr.conf

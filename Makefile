@@ -27,6 +27,11 @@ cleanns:
 test-all: cleanns deploy-k8s run-test
 	- echo "test-all"
 
+run-no: 
+	- kubectl create ns w2
+	- kubectl delete deploy my-dep -n w2
+	- kubectl create deployment my-dep --image=nginx --replicas=1 -n w2
+
 run-test: 
 	- kubectl create ns w1
 	- kubectl label ns w1 webhook-example=enabled

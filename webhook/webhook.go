@@ -3,14 +3,15 @@ package webhook
 import (
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
+	"net/http"
+	"strings"
+	"time"
+
 	log "github.com/sirupsen/logrus"
 	"github.com/wI2L/jsondiff"
 	"github.com/webhookExample/options"
-	"io/ioutil"
-	"net/http"
 	"sigs.k8s.io/yaml"
-	"strings"
-	"time"
 
 	"k8s.io/api/admission/v1beta1"
 	admissionregistrationv1beta1 "k8s.io/api/admissionregistration/v1beta1"
@@ -141,7 +142,7 @@ func (whsvr *WebhookServer) Serve(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-//处理逻辑
+// 处理逻辑
 func (whsvr *WebhookServer) mutate(ar *v1beta1.AdmissionReview) *v1beta1.AdmissionResponse {
 	req := ar.Request
 	var (
@@ -155,7 +156,7 @@ func (whsvr *WebhookServer) mutate(ar *v1beta1.AdmissionReview) *v1beta1.Admissi
 	switch req.Kind.Kind {
 	// 支持Deployment
 	case "Deployment":
-		if err := json.Unmarshal(req.Object.Raw, &deployment); err != nil {
+		if err := json.Unmarshal(req.Object.Raw, &deployment); err != nil { // 在这里获取deployment
 			log.Errorln(fmt.Sprintf("\nCould not unmarshal raw object: %v", err))
 			return &v1beta1.AdmissionResponse{
 				Result: &metav1.Status{
@@ -229,7 +230,7 @@ func admissionRequired(ignoredList []string, metadata *metav1.ObjectMeta) bool {
 	return required
 }
 
-//不处理情况：特定命名空间；已经处理的；label：webhook-example.github.com/app=false的
+// 不处理情况：特定命名空间；已经处理的；label：webhook-example.github.com/app=false的
 func mutationRequired(ignoredList []string, metadata *metav1.ObjectMeta) bool {
 	required := admissionRequired(ignoredList, metadata)
 	if !required {
@@ -249,7 +250,7 @@ func mutationRequired(ignoredList []string, metadata *metav1.ObjectMeta) bool {
 	return required
 }
 
-//拼接PatchJson
+// 拼接PatchJson
 func createPatch(deployment appsv1.Deployment, addAnnotations map[string]string, addLabels map[string]string) ([]byte, error) {
 
 	var patches []patchOperation
