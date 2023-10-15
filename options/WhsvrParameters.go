@@ -18,7 +18,8 @@ type WhSvrParameters struct {
 }
 
 const (
-	MutatePath = "/mutate"
+	MutatePath   = "/mutate"
+	ValidatePath = "/validate"
 )
 
 var Parameters WhSvrParameters

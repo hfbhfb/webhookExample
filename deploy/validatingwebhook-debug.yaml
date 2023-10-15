@@ -1,0 +1,19 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingWebhookConfiguration
+metadata:
+  name: webhook-example
+  labels:
+    app: webhook-example
+webhooks:
+  - name: webhook-example.github.com
+    clientConfig:
+      url: ${debug_url}
+      caBundle: ${CA_BUNDLE}
+    admissionReviewVersions: [ "v1beta1" ]
+    sideEffects: None
+    rules:
+      - operations: [ "CREATE" ]
+        apiGroups: ["apps", ""]
+        apiVersions: ["v1"]
+        resources: ["deployments"]
+

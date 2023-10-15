@@ -1,6 +1,7 @@
 
 IMG ?= swr.cn-north-4.myhuaweicloud.com/hfbbg4/k8s-webhook-helloworld:v1
-DEBUG_LOCAL ?= https://192.168.125.37:6444/mutate/
+#DEBUG_LOCAL ?= https://192.168.125.37:6444/mutate # 增加validate的内容，把这个删除了
+DEBUG_LOCAL ?= https://192.168.125.37:6444
 
 aaa:
 	- export debug_url=$(DEBUG_LOCAL); printenv
@@ -47,6 +48,8 @@ reload-test:
 
 
 #   开发调试如下配置
+just-install-debug:
+	export debug_url=$(DEBUG_LOCAL); cd deploy && pwd &&bash install.sh
 
 deploy-k8s-calllocal: build-docker
 	- kubectl create ns webhook-example

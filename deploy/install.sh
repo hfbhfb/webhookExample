@@ -28,10 +28,25 @@ kubectl delete -f current_mutatingwebhook.yaml  ${kubectl_ns}
 if [ "$debug_url" == "" ]; then
   cat ./mutatingwebhook.yaml | ./webhook-patch-ca-bundle.sh > current_mutatingwebhook.yaml ${kube_config} && kubectl apply -f current_mutatingwebhook.yaml ${kubectl_ns}
 else
+  debug_urlbak=$debug_url
+  debug_url=$debug_url/mutate/
+  export debug_url
   cat ./mutatingwebhook-debug.yaml | ./webhook-patch-ca-bundle.sh > current_mutatingwebhook.yaml ${kube_config} && kubectl apply -f current_mutatingwebhook.yaml ${kubectl_ns}
+  debug_url=$debug_urlbak
 fi
 
 
 # 用makefile在另外的命令空间
 #kubectl label ns ${ns} webhook-example=enabled ${kube_config}
+
+if [ "$debug_url" == "" ]; then
+  cat ./validatingwebhook.yaml | ./webhook-patch-ca-bundle.sh > current_validatingwebhook.yaml ${kube_config} && kubectl apply -f current_validatingwebhook.yaml ${kubectl_ns}
+else
+  debug_urlbak=$debug_url
+  debug_url=$debug_url/validate/
+  export debug_url
+  cat ./validatingwebhook-debug.yaml | ./webhook-patch-ca-bundle.sh > current_validatingwebhook.yaml ${kube_config} && kubectl apply -f current_validatingwebhook.yaml ${kubectl_ns}
+fi
+
+
 

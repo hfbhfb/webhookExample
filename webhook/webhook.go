@@ -142,6 +142,62 @@ func (whsvr *WebhookServer) Serve(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+// Validate
+func (whsvr *WebhookServer) ValidateHandle(w http.ResponseWriter, r *http.Request) {
+	log.Info("run validate here")
+
+	//读取从ApiServer过来的数据放到body
+	var body []byte
+	if r.Body != nil {
+		if data, err := ioutil.ReadAll(r.Body); err == nil {
+			body = data
+		}
+	}
+	if len(body) == 0 {
+		logString := "empty body"
+		log.Warnf(logString)
+		//返回状态码400
+		//如果在Apiserver调用此Webhook返回是400，说明APIServer自己传过来的数据是空
+		http.Error(w, logString, http.StatusBadRequest)
+		return
+	}
+
+	// verify the content type is accurate
+	contentType := r.Header.Get("Content-Type")
+	if contentType != "application/json" {
+		logString := fmt.Sprintf("Content-Type=%s, expect `application/json`", contentType)
+		log.Warnf(logString)
+		//如果在Apiserver调用此Webhook返回是415，说明APIServer自己传过来的数据不是json格式，处理不了
+		http.Error(w, logString, http.StatusUnsupportedMediaType)
+		return
+	}
+
+	Response := &v1beta1.AdmissionResponse{
+		Allowed: true, // 在这里判断是否返回拒绝或者接受的状态
+		Result: &metav1.Status{
+			Status:  metav1.StatusSuccess,
+			Message: "my validate ok ",
+			Code:    200,
+		},
+	}
+
+	admissionReview := v1beta1.AdmissionReview{}
+	admissionReview.Response = Response
+	resp, err := json.Marshal(admissionReview)
+	if err != nil {
+		logString := fmt.Sprintf("\nCan't encode response: %v", err)
+		log.Errorln(logString)
+		http.Error(w, logString, http.StatusInternalServerError)
+	}
+	log.Infoln("Ready to write reponse ...")
+	if _, err := w.Write(resp); err != nil {
+		logString := fmt.Sprintf("\nCan't write response: %v", err)
+		log.Errorln(logString)
+		http.Error(w, logString, http.StatusInternalServerError)
+	}
+
+}
+
 // 处理逻辑
 func (whsvr *WebhookServer) mutate(ar *v1beta1.AdmissionReview) *v1beta1.AdmissionResponse {
 	req := ar.Request
