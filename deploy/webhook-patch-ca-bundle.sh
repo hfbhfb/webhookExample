@@ -18,3 +18,10 @@ if command -v envsubst >/dev/null 2>&1; then
 else
     sed -e "s|\${CA_BUNDLE}|${CA_BUNDLE}|g"
 fi
+
+
+if command -v envsubst >/dev/null 2>&1; then
+    envsubst
+else
+    sed -e "s|\${debug_url}|${debug_url}|g"
+fi

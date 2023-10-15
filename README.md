@@ -1,3 +1,16 @@
+
+## 清空-》编译linux二进制 -》csr证书准备-》在集群中部署webhook-》测试（配置命名空间，创建deploy，观察busybox容器被注入）
+make test-all #部署负载到
+make debug-local #
+
+## 证书相关(原理介绍)
+
+1. deploy/current_mutatingwebhook.yaml 这个在脚本是从kubectl 获取 ~/.kube/config 获取certificate-authority-data这个字段
+
+2. csr证书是脚本创建并存储在k8s的secret资源中
+
+3. deploy/webhookExample.yaml 引用webhook-example，配置在~/.webhookExample/pki目录中
+
 # webhook
 对kubernetes的webhook开发实例
 

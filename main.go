@@ -4,14 +4,15 @@ import (
 	"context"
 	"crypto/tls"
 	"fmt"
-	log "github.com/sirupsen/logrus"
-	"github.com/webhookExample/k8s"
-	"github.com/webhookExample/options"
-	"github.com/webhookExample/webhook"
 	"net/http"
 	"os"
 	"os/signal"
 	"syscall"
+
+	log "github.com/sirupsen/logrus"
+	"github.com/webhookExample/k8s"
+	"github.com/webhookExample/options"
+	"github.com/webhookExample/webhook"
 )
 
 func main() {
@@ -67,5 +68,6 @@ func init() {
 	customFormatter.TimestampFormat = "2006-01-02 15:04:05"
 	log.SetFormatter(customFormatter)
 	customFormatter.FullTimestamp = true
+	log.SetReportCaller(true)
 
 }
