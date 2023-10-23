@@ -64,7 +64,7 @@ tmpdir=$(mktemp -d)
 echo "creating certs in tmpdir ${tmpdir} "
 
 # 签名本地 192.168.125.37 
-cat <<EOF >> ${tmpdir}/ 
+cat > ${tmpdir}/csr.conf <<EOF 
 [req]
 req_extensions = v3_req
 distinguished_name = req_distinguished_name
@@ -73,15 +73,13 @@ distinguished_name = req_distinguished_name
 basicConstraints = CA:FALSE
 keyUsage = nonRepudiation, digitalSignature, keyEncipherment
 extendedKeyUsage = serverAuth
+subjectAltName = @alt_names
 
 [alt_names]
 DNS.1 = ${service}
 DNS.2 = ${service}.${namespace}
 DNS.3 = ${service}.${namespace}.svc
-
-
-[req_ext]
-subjectAltName = IP:192.168.125.37
+IP.1 = 192.168.125.37
 
 EOF
 

@@ -13,6 +13,9 @@ build-bin:
 build-docker: build-bin
 	DOCKER_BUILDKIT=0 docker build  -t ${IMG} .
 
+just-install:
+	- export debug_url=; cd deploy && pwd &&bash install.sh
+
 deploy-k8s: build-docker
 	- kubectl create ns webhook-example
 	- export debug_url=; cd deploy && pwd &&bash install.sh
