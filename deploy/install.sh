@@ -12,7 +12,11 @@ kubectl_ns='--namespace webhook-example'
 sed -e "s/\${namespace}/${ns}/g" rbac.yaml > current_rbac.yaml
 kubectl apply -f current_rbac.yaml  ${kubectl_ns} ${kube_config}
 
-./webhook-create-signed-cert.sh  ${kubectl_ns} ${kube_config}
+
+export myip=`echo $debug_url|awk -F'/' '{print $3}'|awk -F':' '{print $1}'`
+echo $myip
+
+export myip=$myip && ./webhook-create-signed-cert.sh  ${kubectl_ns} ${kube_config}
 
 
 kubectl delete -f service.yaml  ${kubectl_ns} 

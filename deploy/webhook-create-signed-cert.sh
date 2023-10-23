@@ -60,10 +60,12 @@ if [ ! -x "$(command -v openssl)" ]; then
 fi
 
 csrName=${service}.${namespace}
-tmpdir=$(mktemp -d)
+tmpdir=tmpaa
+rm -Rf $tmpdir
+mkdir -p $tmpdir
 echo "creating certs in tmpdir ${tmpdir} "
 
-# 签名本地 192.168.125.37 
+# 签名本地 
 cat > ${tmpdir}/csr.conf <<EOF 
 [req]
 req_extensions = v3_req
@@ -79,7 +81,7 @@ subjectAltName = @alt_names
 DNS.1 = ${service}
 DNS.2 = ${service}.${namespace}
 DNS.3 = ${service}.${namespace}.svc
-IP.1 = 192.168.125.37
+IP.1 = ${myip}
 
 EOF
 

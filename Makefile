@@ -3,8 +3,18 @@ IMG ?= swr.cn-north-4.myhuaweicloud.com/hfbbg4/k8s-webhook-helloworld:v1
 #DEBUG_LOCAL ?= https://192.168.125.37:6444/mutate # 增加validate的内容，把这个删除了
 DEBUG_LOCAL ?= https://192.168.125.37:6444
 
-aaa:
-	- export debug_url=$(DEBUG_LOCAL); printenv
+# 先运行下这个
+createns:
+	- echo -e "\033[31m DEBUG_LOCAL 有没有修改，当前值为： ${DEBUG_LOCAL} \033[0m" 
+	- kubectl create ns w1
+	- kubectl create ns w2
+	- kubectl create ns webhook-example
+
+# 
+runlocal: 
+	- bash precheck.sh #安装依赖项
+	go build
+	- ./webhookExample --tlsCertFile=./pki/cert.pem --tlsKeyFile=./pki/key.pem --automatic-authentication=false --kubeconfig=~/.kube/config --log-v=5
 
 build-bin:
 	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o bin/k8s-webhook-helloworld main.go
